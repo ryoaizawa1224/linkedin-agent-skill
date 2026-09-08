@@ -1,30 +1,30 @@
-# The LinkedIn agent skill for Codex
+# LinkedIn Agent Skill for Codex
 
-Eleven Codex skills for running the writing and planning side of a LinkedIn account. Free, MIT, no signup, no API key, nothing to connect.
+LinkedInアカウントの「書く・考える・振り返る」を担当する、Codex向け11個のSkillセットです。MITライセンス、登録不要、APIキー不要、外部サービスへの接続も不要です。
 
-One writes posts from 21 hook formulas. One comments on other people's posts. One handles replies under yours. One scores your profile out of 100 and rewrites what lost points. One plans the week: what to post, when, and who to engage with.
+投稿案を21種類のフックから作るSkill、他人の投稿へのコメントを書くSkill、自分の投稿についたコメントへの返信を作るSkill、プロフィールを100点満点で採点して改善するSkill、1週間の投稿・交流計画を作るSkillなどが含まれます。
 
-And one is the humanizer. It strips em dashes, stock AI phrasing and invisible format characters out of a draft, then scores what is left against a five-check local heuristic panel before you see it.
+さらに `$li-human` が、em dashや生成AIで出やすい定型表現、不可視文字などを除去し、5つのローカル指標で文章をチェックします。
 
-**Nothing gets posted until you say yes.** These skills write. You post.
+**LinkedInへの投稿・コメント・DM送信は自動では行いません。** Skillが文章を作り、最終的な投稿操作はユーザーが行います。
 
-This fork ports Jake Schincariol's original Claude skill pack to OpenAI Codex. The content strategy and Python tooling remain his work; the Codex packaging and invocation conventions are adapted here.
+このforkは、Jake Schincariol氏のClaude向けオリジナル版をOpenAI Codex向けに移植したものです。コンテンツ戦略やPythonツールの基本設計は原作者によるもので、Codex向けのパッケージング、呼び出し方法、ファイルパスなどを調整しています。
 
-## Install
+## インストール
 
-### Ask Codex to install from GitHub
+### CodexにGitHubからインストールさせる
 
-Give Codex this repository and ask it to install all skills under `skills/`:
+Codexにこのリポジトリを渡し、`skills/` 以下のSkillをすべてインストールするよう依頼します。
 
 ```text
 https://github.com/ryoaizawa1224/linkedin-agent-skill
 
-Install the LinkedIn skills in this repository, then confirm $li-post is available.
+このリポジトリのLinkedIn Skillsをすべてインストールして、$li-post が使えることを確認して。
 ```
 
-Codex's skill installer supports installing skills directly from a GitHub repository into `$CODEX_HOME/skills` (normally `~/.codex/skills`).
+CodexのSkill installerは、GitHubリポジトリから `$CODEX_HOME/skills`（通常は `~/.codex/skills`）へSkillを直接インストールできます。
 
-### Manual global install
+### 手動でグローバルインストール
 
 ```bash
 git clone https://github.com/ryoaizawa1224/linkedin-agent-skill.git
@@ -32,48 +32,48 @@ mkdir -p ~/.codex/skills
 cp -r linkedin-agent-skill/skills/li-* ~/.codex/skills/
 ```
 
-### Project-local install
+### プロジェクト単位でインストール
 
-Copy the skill folders into your repo's `.agents/skills/` directory:
+対象プロジェクトの `.agents/skills/` にSkillフォルダをコピーします。
 
 ```bash
 mkdir -p .agents/skills
 cp -r /path/to/linkedin-agent-skill/skills/li-* .agents/skills/
 ```
 
-The repository also includes `.codex-plugin/plugin.json` for Codex plugin packaging.
+このリポジトリにはCodex Plugin用の `.codex-plugin/plugin.json` も含めます。
 
-## Set up your voice
+## 最初にvoice.mdを作る
 
-Spend ten minutes on `templates/voice.md`. Copy it to:
+`templates/voice.md` を次の場所へコピーします。
 
 ```text
 ~/.codex/linkedin/voice.md
 ```
 
-Fill it in, or give Codex three of your own past posts and ask it to write the voice profile from them. Every relevant skill reads that local file.
+テンプレートを自分で埋めてもよいですし、自分の過去投稿を3本Codexに渡して「これを元にvoice.mdを作って」と依頼しても構いません。関連するSkillはこのファイルを参照し、文体や避ける表現、読者像などを合わせます。
 
-Keep `voice.md`, `log.md` and `plan.md` local. Do not commit them to this public repository if they contain personal or private information.
+`voice.md`、`log.md`、`plan.md` はユーザー個人のローカルファイルとして扱います。個人情報や非公開情報が含まれる場合、このpublicリポジトリへcommitしないでください。
 
-## The eleven
+## 11個のSkill
 
-| skill | what it does |
+| Skill | 内容 |
 | --- | --- |
-| `$li-post` | One idea into a post. Three hook options from [21 formulas](skills/li-post/hooks.json), one full draft, humanized before you see it. |
-| `$li-comment` | Comments on other people's posts. Nine types, picked by what the post actually is. Never "Great post!". |
-| `$li-reply` | The thread under your own post. Sorts comments into lead / substance / peer / support / noise, then writes in that order. |
-| `$li-profile` | Scores your profile against a [12-part rubric](skills/li-profile/rubric.json) out of 100, then rewrites in fix-first order. |
-| `$li-plan` | The week. What to post, when to post it, and the 10 people to engage with. Writes `~/.codex/linkedin/plan.md`. |
-| `$li-human` | The humanizer. Two local Python scripts. |
-| `$li-carousel` | Document posts. Slide-by-slide copy, cover, and PDF plan. |
-| `$li-repurpose` | One video, newsletter or transcript into a week of posts that each stand alone. |
-| `$li-dm` | The 200-character invite note, first message, and two follow-ups. |
-| `$li-inbox` | Triages the inbox into lead / recruiter / peer / ask / spam. |
-| `$li-audit` | Post-mortem on what you have published. Ranks by engagement rate and reach multiple, not impressions. |
+| `$li-post` | 1つのアイデアからLinkedIn投稿を作成。21種類のフックから3案を選び、本文まで作る。 |
+| `$li-comment` | 他人の投稿へのコメント案を作成。投稿内容に応じて9タイプから選ぶ。 |
+| `$li-reply` | 自分の投稿についたコメントを分類し、返信案を作成。 |
+| `$li-profile` | プロフィールを12項目・100点満点で採点し、改善文を作る。 |
+| `$li-plan` | 1週間の投稿内容・投稿時刻・交流対象を計画。`~/.codex/linkedin/plan.md` に保存。 |
+| `$li-human` | 文章のAIっぽい定型表現や不可視文字などを除去・検査するローカルツール。 |
+| `$li-carousel` | LinkedInのドキュメント投稿／カルーセルの構成とスライド文面を作成。 |
+| `$li-repurpose` | 動画、ニュースレター、記事、文字起こしなどから複数投稿を抽出。 |
+| `$li-dm` | 接続申請文、最初のDM、フォローアップ文を作成。 |
+| `$li-inbox` | LinkedIn受信箱の内容をlead / recruiter / peer / ask / spamに分類し、必要な返信だけ作る。 |
+| `$li-audit` | 過去投稿を分析し、何が機能しているか、何をやめるべきかを整理。 |
 
-## The humanizer
+## Humanizer
 
-`$li-human` ships two Python scripts with no external dependencies. They run locally on your text.
+`$li-human` には外部依存のない2つのPythonスクリプトが含まれています。すべてローカルで実行されます。
 
 ```bash
 python3 humanize.py draft.txt --report
@@ -81,19 +81,19 @@ python3 detect.py draft.txt
 python3 detect.py before.txt after.txt
 ```
 
-It automatically handles:
+主な処理は次の通りです。
 
-- Invisible and format characters such as zero-width spaces, joiners, soft hyphens, BOMs and non-breaking spaces.
-- Typography such as em dash -> comma, en dash -> hyphen, curly quotes -> straight quotes and ellipsis -> three dots.
-- A lexicon of stock AI phrasing in [`slop.json`](skills/li-human/slop.json).
+- ゼロ幅スペース、joiner、soft hyphen、BOM、non-breaking spaceなどの不可視・format文字を除去／正規化
+- em dash → comma、en dash → hyphen、curly quote → straight quote、ellipsis → `...` などのタイポグラフィ正規化
+- [`slop.json`](skills/li-human/slop.json) に登録された生成AIで頻出しやすい定型表現の置換
 
-Structural tells such as rule-of-three phrasing, rhetorical one-word questions, hashtag walls, engagement bait and uniform sentence length are flagged for rewriting rather than modified blindly.
+三段論法的な定型、1語だけの修辞疑問、ハッシュタグの壁、露骨なengagement bait、文長の均一さなどは、自動修正せず「要書き換え」として検出します。
 
-The five local checks are burstiness, specificity, slop density, fingerprint and voice. They are heuristics, not external detector APIs, and they do not promise that text is "undetectable".
+5つの指標は BURSTINESS、SPECIFICITY、SLOP DENSITY、FINGERPRINT、VOICE です。これらはローカルなヒューリスティクスであり、GPTZero等の外部検出APIではありません。また、「AI生成と絶対に検出されない」ことを保証するものでもありません。
 
-## Codex state files
+## Codexで使う状態ファイル
 
-The skills use these user-local files when available:
+必要に応じて以下を参照します。
 
 ```text
 ~/.codex/linkedin/voice.md
@@ -101,35 +101,36 @@ The skills use these user-local files when available:
 ~/.codex/linkedin/plan.md
 ```
 
-`voice.md` stores style guidance. `log.md` stores the post/history notes used by `$li-audit`. `plan.md` stores the weekly plan used across the pack.
+- `voice.md`: 文体、読者像、使う／使わない表現、公開可能な実績など
+- `log.md`: 過去に作成・投稿した内容の履歴。`$li-audit` で利用
+- `plan.md`: `$li-plan` が作成する週間運用計画
 
-## Safety and LinkedIn automation
+## LinkedInの自動操作について
 
-These skills do **not** publish, comment, connect, send DMs or scrape LinkedIn automatically. They produce copy-ready text for the user to post manually.
+このSkillセットはLinkedIn上での投稿、コメント、connection request、DM送信、スクレイピングを自動実行しません。最終的なLinkedIn上の操作はユーザー自身が行います。
 
-That approval boundary is intentional. It avoids browser automation and automated outreach patterns that can violate LinkedIn's terms or put an account at risk.
+また、実績、数値、クライアント、成果、共通の知人などを捏造しません。必要な事実が不足している場合は、ユーザーに確認するか、未確定であることを明示します。
 
-Nothing here should fabricate metrics, clients, outcomes or mutual connections. If a draft needs a fact the user has not supplied, it should be requested or clearly left unresolved.
-
-## Files
+## 主なファイル
 
 ```text
-.codex-plugin/plugin.json        Codex plugin manifest
-skills/li-post/hooks.json        21 hook formulas
-skills/li-human/slop.json        humanizer lexicon and structural tells
-skills/li-human/humanize.py      cleaning passes
-skills/li-human/detect.py        five-check panel
-skills/li-profile/rubric.json    100-point profile rubric
-templates/voice.md               voice profile template
+.codex-plugin/plugin.json        Codex Plugin manifest
+skills/li-post/hooks.json        21種類の投稿フック
+skills/li-human/slop.json        定型表現・不可視文字・構造パターン
+skills/li-human/humanize.py      文章クリーニング
+skills/li-human/detect.py        5指標によるチェック
+skills/li-profile/rubric.json    プロフィール100点採点基準
+templates/voice.md               文体プロフィールのテンプレート
 ```
 
 ## Credit
 
-Original skill pack by Jake Schincariol, [opusjake.ai](https://opusjake.ai).
-Original repository: [Jakeschincariol/linkedin-agent-skill](https://github.com/Jakeschincariol/linkedin-agent-skill).
+Original skill pack: Jake Schincariol — [opusjake.ai](https://opusjake.ai)
 
-Codex port maintained in this fork by Ryo Aizawa.
+Original repository: [Jakeschincariol/linkedin-agent-skill](https://github.com/Jakeschincariol/linkedin-agent-skill)
+
+Codex向け移植・日本語化: Ryo Aizawa
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT。詳細は [LICENSE](LICENSE) を参照してください。
