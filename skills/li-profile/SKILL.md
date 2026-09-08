@@ -1,40 +1,39 @@
 ---
 name: li-profile
 description: >-
-  Score a LinkedIn profile out of 100 against a 12-part rubric and rewrite the
-  parts that lose points - headline, about, experience, featured, banner. Use
-  when the user says "optimize my profile", "score my LinkedIn", "rewrite my
-  headline", "fix my about section", or pastes their profile and asks how it
-  reads.
+  LinkedInプロフィールを12項目・100点満点で採点し、headline、About、Experience、Featured、Bannerなどを改善する。
+  プロフィール診断、headline改善、About書き換えなどを頼まれたときに使う。
 ---
 
 # li-profile
 
-A profile is not a resume. A resume answers "what have you done". A profile answers "should I message this person" from the headline and first lines of the about section.
+プロフィールを「経歴の一覧」ではなく、「この人に連絡する価値があるか」を短時間で伝えるページとして評価する。
 
-## Input
+## 入力
 
-Ask the user to paste their headline, about section, current role, recent experience, and whether they have a banner and featured section. A screenshot of the top card is enough for a first pass. Do not log into LinkedIn on their behalf.
+headline、About、現在の役割、最近のExperience、BannerとFeaturedの有無を確認する。トップ部分のスクリーンショットだけでも初回診断は可能。LinkedInへログインして直接編集しない。
 
-## Score it
+## 採点
 
-Read `rubric.json` in this folder. Score every item, show the table, and give the total.
+このフォルダの `rubric.json` を読み、12項目すべてを採点して合計点を出す。点を甘くつけず、失点理由を明示する。
 
-## Rewrite order
+## 修正順
 
-Fix in descending order of points lost:
+失点の大きい箇所から修正する。基本優先度は次の通り。
 
 1. Headline
-2. About first two lines
-3. About body
+2. Aboutの最初の2行
+3. About本文
 4. Featured
 5. Experience
 6. Banner
 
-Keep claims factual and do not invent proof or metrics.
+Headlineは「何を、誰に、どんな根拠をもって提供する人か」が短時間で分かるようにする。Aboutは読者1人に話しかけるように書き、問題、提供価値、実績、次の行動を整理する。
 
-## Output
+実績や数値は捏造しない。
 
-Show the score table and copy-ready rewrites in fix-first order. Invoke `$li-human` on every rewritten text block. Re-score at the end and show the delta honestly.
+## 出力
 
-Nothing is saved to LinkedIn by this skill. The user pastes each section in.
+採点表を先に出し、その後に失点の大きい順でコピペ可能な改善案を提示する。書き換えた文章は `$li-human` を通す。
+
+最後に再採点し、改善前後の差を示す。LinkedInへの保存・更新操作はユーザー自身が行う。
