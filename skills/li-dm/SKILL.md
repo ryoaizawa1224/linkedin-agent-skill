@@ -1,20 +1,44 @@
 ---
 name: li-dm
 description: >-
-  Write connection notes and DM follow-ups that get replies - the invite note,
-  the first message, and the follow-ups. Use when the user says "write a
-  connection request", "DM this person", "outreach message", "how do I follow
-  up", or is reaching out to someone specific on LinkedIn.
+  LinkedInのconnection request、最初のDM、フォローアップ文を作る。
+  outreach、DM、接続申請、フォローアップを頼まれたときに使う。
 ---
 
 # li-dm
 
-Get the specifics first: who the person is, the real reason to reach out now, and what the user ultimately wants.
+接続申請やDMを、汎用営業文ではなく「なぜ今この相手に連絡するのか」が分かる文章にするSkill。
 
-Write a short invite note, then a concise first message that references the same specific context and gives something before asking. Follow-ups should add new value rather than just bumping the thread.
+## 書く前に確認すること
 
-Never fabricate a mutual connection, shared history, or having read something the user has not read. Never automate sending or connection requests.
+1. **誰に送るか**: 名前、役割、会社など
+2. **今連絡する具体的な理由**: 相手の投稿、発表、登壇、共通の出来事など
+3. **最終的に何を求めているか**: 会話、紹介、採用、商談など
 
-## Output
+具体的な理由がない場合は、無理に自然なふりをした文章を作らない。
 
-Return the invite note with character count, the first message, and follow-ups with suggested timing. Invoke `$li-human` on all outbound text. The user sends every message manually.
+## Connection request
+
+短く、相手固有の具体的な参照 + 自分が誰か、程度にする。接続申請文の時点で大きなお願いや営業pitchを詰め込まない。文字数制限がある場合は実際に数える。
+
+## 最初のDM
+
+- 2〜4文程度を基本にする。
+- 接続申請で触れた具体的な話題を引き継ぐ。
+- 何かを求める前に、情報・数字・資料など相手にとっての価値を1つ渡す。
+- askは1つ、小さく具体的にする。
+- 最初からcalendar linkを押し付けない。
+
+## フォローアップ
+
+「just following up」のような単なる催促ではなく、新しい情報や価値があるときだけ送る。回数を増やし続けない。
+
+## 禁止
+
+- connection requestやDMの自動送信
+- 実在しない共通の知人・学校・出来事の捏造
+- 読んでいない相手の記事や投稿を読んだふりすること
+
+## 出力
+
+connection request、最初のDM、必要なフォローアップをまとめて提示し、すべて `$li-human` を通す。実際の送信はユーザーが行う。
