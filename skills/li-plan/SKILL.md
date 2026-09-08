@@ -1,39 +1,37 @@
 ---
 name: li-plan
 description: >-
-  Build the week on LinkedIn - what to post, when to post it, and who to engage
-  with. Use when the user says "plan my week", "what should I post", "content
-  calendar", "I have nothing to post about", or wants a posting schedule and an
-  engagement list.
+  LinkedInの1週間の運用計画を作る。何を投稿するか、いつ投稿するか、誰と交流するかを決める。
+  「今週の投稿計画」「何を投稿すればいい」「content calendar」などを頼まれたときに使う。
 ---
 
 # li-plan
 
-The control room. Everything else in this pack executes; this decides what gets executed. Run it once a week, on the same day.
+このSkillセットの司令塔。週1回、同じ曜日に実行する想定。
 
-## Input
+## 入力
 
-If `~/.codex/linkedin/voice.md` and `~/.codex/linkedin/log.md` exist, read them. The plan should not repeat a theme from the last fortnight. If they do not exist, ask for:
+`~/.codex/linkedin/voice.md` と `~/.codex/linkedin/log.md` があれば読み、直近2週間で同じテーマを繰り返さないようにする。ない場合は次を確認する。
 
-1. What the user sells, and to whom.
-2. The three or four themes they want to be known for.
-3. What actually happened this week: a client call, a number, a mistake, a thing they built, an argument they had.
-4. Ten to twenty people or companies worth being visible to.
+1. 何を提供／販売していて、誰が相手か。
+2. どんな3〜4テーマで知られたいか。
+3. 今週実際に起きたこと。顧客との会話、数字、失敗、作ったもの、議論など。
+4. 継続的に関係を作りたい人物・企業を10〜20件。
 
-## What to post
+## 投稿内容
 
-Use a balanced mix of proof, opinion, teach, story, and offer. For each slot give the theme, the specific angle drawn from what actually happened this week, and the hook formula number from `li-post/hooks.json` that fits it. Not a topic, an angle.
+Proof、Opinion、Teach、Story、Offerを偏らせすぎず組み合わせる。各投稿枠には単なる「テーマ」ではなく、今週の具体的な出来事から切り出した**角度**を設定し、`li-post/hooks.json` のhook formulaも割り当てる。
 
-## When to post
+## 投稿時刻
 
-Anchor times to the audience's timezone. Treat timing as secondary to the quality of the hook and the post itself.
+ユーザー自身ではなく、想定読者のタイムゾーンに合わせる。投稿時刻の最適化は、フックや本文の質より優先しない。
 
-## Who to engage with
+## 交流対象
 
-Build a list of 10 split across reach, peers, and buyers. The goal is useful, genuine engagement, not automated activity.
+10人程度を、reach / peers / buyersの3グループに分ける。目的は自動的ないいね回りではなく、相手の投稿に本当に追加価値のあるコメントをすること。
 
-## Output
+## 出力
 
-Produce a weekly schedule and engagement list. When the user says something like "write Tuesday", invoke `$li-post` for that slot.
+曜日ごとの投稿／交流予定と対象者リストを出す。「火曜の投稿を書いて」のように指定されたら `$li-post` を使う。
 
-Write the plan to `~/.codex/linkedin/plan.md` so the other skills can read it. Nothing is scheduled or posted anywhere; this is a plan and the user runs it.
+計画は `~/.codex/linkedin/plan.md` に保存し、他のSkillから読めるようにする。LinkedInへの予約投稿や自動操作は行わない。
