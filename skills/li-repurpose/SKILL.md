@@ -1,20 +1,35 @@
 ---
 name: li-repurpose
 description: >-
-  Turn one long asset - a YouTube video, podcast, newsletter, blog post,
-  transcript or client call - into a week of LinkedIn posts. Use when the user
-  says "repurpose this", "turn this into posts", "I have a video/newsletter/
-  transcript", or pastes a long piece of content and wants it on LinkedIn.
+  YouTube動画、Podcast、ニュースレター、ブログ、文字起こし、会話記録など1つの長い素材から、
+  複数のLinkedIn投稿案を抽出する。コンテンツの再利用や投稿化を頼まれたときに使う。
 ---
 
 # li-repurpose
 
-One good long asset contains four to six posts. Extract claims, numbers, stories, mechanisms, mistakes, and quotable lines before drafting anything.
+1つの長い素材から、単なる要約ではなく**単独で成立する投稿の種**を取り出すSkill。
 
-Each extract must stand on its own. Assign varied hook formulas from `li-post/hooks.json` and avoid making every post sound like the same template.
+## 入力
 
-## Output
+文字起こし、記事、ニュースレター、台本、会話要約などを読む。URLしかなく内容を取得できない場合は、内容を推測しない。
 
-First show what was extracted and a week plan. Then draft one item at a time on request. Invoke `$li-post` and `$li-human` for each drafted post.
+## 抽出するもの
 
-Do not dump a full week of finished posts unless the user explicitly asks for that.
+- **Claims**: 意見や議論の起点になる主張
+- **Numbers**: 金額、期間、割合、件数などの数字
+- **Stories**: 人物、場面、結果やコストがあるエピソード
+- **Mechanisms**: 「なぜそうなるか」「どう動くか」の説明
+- **Mistakes**: 失敗や誤算
+- **Lines**: そのまま引用したくなる強い一文
+
+最初に何が何件見つかったかを示す。素材が薄いなら、無理に投稿数を増やさない。
+
+## 週間投稿への変換
+
+各素材は、元コンテンツを見ていない人にも単独で意味が通じる投稿にする。`li-post/hooks.json` から異なるhook formulaを割り当て、同じ型ばかりにしない。
+
+## 出力
+
+まず抽出結果と週間案を出す。その後、ユーザーが指定した投稿を1本ずつ `$li-post` と `$li-human` を使って完成させる。
+
+ユーザーが明示的に求めない限り、似た文体の完成投稿を一度に大量生成しない。
