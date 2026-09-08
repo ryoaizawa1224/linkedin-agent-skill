@@ -1,88 +1,46 @@
 ---
 name: li-audit
 description: >-
-  Post-mortem on what the user has already published - which posts actually
-  worked, why, and what to stop doing. Use when the user pastes their LinkedIn
-  analytics or past posts and asks "what's working", "why did this flop", "read
-  my analytics", "audit my content", or wants to know what to double down on.
+  過去のLinkedIn投稿を分析し、何が機能したか、なぜ伸びた／伸びなかったか、
+  今後何を増やし何をやめるべきかを整理する。投稿分析やanalyticsの監査を頼まれたときに使う。
 ---
 
 # li-audit
 
-The only honest source of what works for an account is that account. Every
-rule in every LinkedIn guide, including the ones in this pack, is a prior. The
-user's own last 30 posts are the evidence.
+一般論より、そのアカウント自身の過去投稿を優先して判断するSkill。
 
-## Input
+## 入力
 
-Ask for whichever the user has:
+利用できるものを使う。
 
-- The post analytics export (LinkedIn: Analytics -> Content -> Export). CSV.
-- Or a screenshot per post with impressions, reactions, comments, reposts.
-- Or just the posts and their reaction counts, which is enough for a first
-  pass.
+- LinkedInのContent Analytics export（CSV）
+- 各投稿のimpressions、reactions、comments、reposts等のスクリーンショット
+- 投稿本文とreaction数だけでも初期分析は可能
 
-Also read `~/.claude/linkedin/log.md` if it exists, since it records which
-hook formula each post used.
+`~/.codex/linkedin/log.md` があれば読み、どのhook formulaを使ったかも照合する。
 
-## What to actually measure
+## 見る指標
 
-Raw impressions are the least useful number on the page, because they are
-mostly a function of how many people already follow the user. Compute these
-instead, and show the working:
+可能な範囲で以下を計算し、式も示す。
 
-| metric | how | what it tells you |
-| --- | --- | --- |
-| **Engagement rate** | (reactions + comments + reposts) / impressions | whether the post earned its reach |
-| **Comment ratio** | comments / reactions | whether it started something or just got a nod |
-| **Reach multiple** | impressions / follower count | whether it travelled past the existing audience |
-| **Save/send rate** | if available | the strongest single predictor of future reach |
+- **Engagement rate** = (reactions + comments + reposts) / impressions
+- **Comment ratio** = comments / reactions
+- **Reach multiple** = impressions / follower count
+- **Save/send rate** = データが取れる場合
 
-Rank by engagement rate and reach multiple, not impressions. A post with 900
-impressions and 40 comments beat the one with 12,000 impressions and 6.
+単純なimpressionsだけではなく、engagement rateとreach multipleを重視する。
 
-## Then find the pattern
+## パターンを探す
 
-With the top 5 and bottom 5 side by side, look for what actually separates
-them, and be willing to conclude something the user will not like:
+上位投稿と下位投稿を並べ、フック、フォーマット、長さ、テーマ、曜日・時間、初動返信などの差を見る。曜日・時間は最後に確認し、他の要因より過大評価しない。
 
-- Hook formula. Which numbers from `hooks.json` are in the top 5?
-- Format. Text, document, image, video.
-- Length.
-- Theme.
-- Day and time - check this **last**, and only if the other four show nothing.
-  It is almost never the cause, and it is where people want it to be.
-- First-hour comments. Posts the user replied to inside an hour versus not.
+サンプル数が少ない場合は、無理に傾向を断定しない。主張には根拠と確信度を添える。
 
-State the finding as a claim with the evidence attached, and say how confident
-it is. With 30 posts you can see a pattern; with 6 you cannot, and you should
-say that instead of inventing one.
+## 出力
 
-## Output
+- 最も強い傾向
+- やめること
+- 増やすこと
+- 次週に試す仮説
 
-```
-AUDIT  ·  31 posts  ·  Jun 12 - Sep 5
-
-TOP 5 BY ENGAGEMENT RATE
-  8.1%  #3  Mistake      "$18,000 is what no contract cost me"      1,940 imp
-  6.4%  #20 Walk-Away    "I fired my highest-paying client"         2,210 imp
-  ...
-
-BOTTOM 5
-  0.4%  #5  List         "7 tools every founder needs"             11,400 imp
-  ...
-
-WHAT THE DATA SAYS
-1. Posts where you were the one who looked bad: mean 6.2% vs 1.1% for
-   everything else. n=6. This is your strongest signal and it is not close.
-2. Tool listicles get impressions and nothing else. High reach, no comments,
-   no leads. Three of your bottom five.
-3. Day of week shows nothing. Your Tuesday mean and your Friday mean are
-   inside the noise. Stop optimising it.
-
-STOP: listicles about tools.
-DO MORE: the ones with a cost you paid, and a number.
-```
-
-Then hand the conclusions to `/li-plan` so next week's plan is built on the
-user's own evidence rather than on defaults.
+を整理し、結論を `$li-plan` に渡して次週の計画へ反映する。

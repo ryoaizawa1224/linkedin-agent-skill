@@ -1,177 +1,136 @@
-# The LinkedIn agent skill
+# LinkedIn Agent Skill for Codex
 
-Eleven Claude skills that run a LinkedIn account. Free, MIT, no signup, no API
-key, nothing to connect.
+LinkedInアカウントの「書く・考える・振り返る」を担当する、Codex向け11個のSkillセットです。MITライセンス、登録不要、APIキー不要、外部サービスへの接続も不要です。
 
-One of them writes your posts off 21 hook formulas. One comments on other
-people's posts. One handles the replies under yours. One scores your profile
-out of 100 and rewrites what lost points. One plans the week: what to post,
-when, and who to engage with.
+投稿案を21種類のフックから作るSkill、他人の投稿へのコメントを書くSkill、自分の投稿についたコメントへの返信を作るSkill、プロフィールを100点満点で採点して改善するSkill、1週間の投稿・交流計画を作るSkillなどが含まれます。
 
-And one is the humanizer, which is the reason the rest are usable. It strips
-the em dashes, the slop vocabulary and the invisible watermark characters out
-of a draft, then scores what is left against a five-check detection panel
-before you ever see it.
+さらに `$li-human` が、em dashや生成AIで出やすい定型表現、不可視文字などを除去し、5つのローカル指標で文章をチェックします。
 
-**Nothing gets posted until you say yes.** These skills write. You post.
+**LinkedInへの投稿・コメント・DM送信は自動では行いません。** Skillが文章を作り、最終的な投稿操作はユーザーが行います。
 
-## Install
+このforkは、Jake Schincariol氏のClaude向けオリジナル版をOpenAI Codex向けに移植したものです。コンテンツ戦略やPythonツールの基本設計は原作者によるもので、Codex向けのパッケージング、呼び出し方法、ファイルパスなどを調整しています。
 
-Paste this into Claude:
+## インストール
 
-```
-https://github.com/Jakeschincariol/linkedin-agent-skill
+### CodexにGitHubからインストールさせる
 
-Install this skill, then confirm /li-post works.
+Codexにこのリポジトリを渡し、`skills/` 以下のSkillをすべてインストールするよう依頼します。
+
+```text
+https://github.com/ryoaizawa1224/linkedin-agent-skill
+
+このリポジトリのLinkedIn Skillsをすべてインストールして、$li-post が使えることを確認して。
 ```
 
-Or do it yourself, in Claude Code:
+CodexのSkill installerは、GitHubリポジトリから `$CODEX_HOME/skills`（通常は `~/.codex/skills`）へSkillを直接インストールできます。
+
+### 手動でグローバルインストール
 
 ```bash
-git clone https://github.com/Jakeschincariol/linkedin-agent-skill.git
-cp -r linkedin-agent-skill/skills/li-* ~/.claude/skills/
+git clone https://github.com/ryoaizawa1224/linkedin-agent-skill.git
+mkdir -p ~/.codex/skills
+cp -r linkedin-agent-skill/skills/li-* ~/.codex/skills/
 ```
 
-Or as a plugin:
+### プロジェクト単位でインストール
 
-```
-/plugin marketplace add Jakeschincariol/linkedin-agent-skill
-/plugin install linkedin-agent
-```
-
-Project-local instead of global: copy the same folders into your repo's
-`.claude/skills/`. No Claude Code at all? Paste any single `SKILL.md` at the
-top of a chat and it runs as a mode - you lose the two Python tools, which is
-most of the point of `/li-human`, but the rest works.
-
-Then spend ten minutes on `templates/voice.md`. Copy it to
-`~/.claude/linkedin/voice.md` and fill it in, or paste three of your own posts
-into Claude and say "write my voice.md from these". Every skill reads that
-file. Skip it and everything comes out sounding like everyone else.
-
-## The eleven
-
-| command | what it does |
-| --- | --- |
-| `/li-post` | One idea into a post. Three hook options from [21 formulas](skills/li-post/hooks.json), one full draft, humanized before you see it. |
-| `/li-comment` | Comments on other people's posts. Nine types, picked by what the post actually is. Never "Great post!". |
-| `/li-reply` | The thread under your own post. Sorts every comment into lead / substance / peer / support / noise, then writes in that order. |
-| `/li-profile` | Scores your profile against a [12-part rubric](skills/li-profile/rubric.json) out of 100, then rewrites in fix-first order. |
-| `/li-plan` | The week. What to post, when to post it, and the 10 people to engage with. Writes `~/.claude/linkedin/plan.md`. |
-| `/li-human` | The humanizer. Two scripts that actually run. See below. |
-| `/li-carousel` | Document posts. Slide-by-slide copy, the cover that earns the swipe, and the PDF to upload. |
-| `/li-repurpose` | One video, newsletter or transcript into a week of posts that each stand alone. |
-| `/li-dm` | The 200-character invite note, the first message, and the two follow-ups. Two. |
-| `/li-inbox` | Triages the inbox into lead / recruiter / peer / ask / spam, and tells you which tell gave the sequence away. |
-| `/li-audit` | Post-mortem on what you have already published. Ranks by engagement rate and reach multiple, not impressions. |
-
-## The humanizer
-
-`/li-human` ships two Python scripts with no dependencies. They run on your
-machine, on your text, and nothing is uploaded.
+対象プロジェクトの `.agents/skills/` にSkillフォルダをコピーします。
 
 ```bash
-python3 humanize.py draft.txt --report      # clean it, show every change
-python3 detect.py draft.txt                  # score it, five checks
-python3 detect.py before.txt after.txt       # prove the delta
+mkdir -p .agents/skills
+cp -r /path/to/linkedin-agent-skill/skills/li-* .agents/skills/
 ```
 
-**What comes out automatically:**
+このリポジトリにはCodex Plugin用の `.codex-plugin/plugin.json` も含めます。
 
-- **Invisible characters.** Zero-width spaces and joiners, word joiners, soft
-  hyphens, byte-order marks, Unicode tag characters, non-breaking and narrow
-  spaces. Your keyboard does not make these. They survive copy-paste and they
-  are invisible in every editor you own.
-- **Typography.** Em dash to comma, en dash to hyphen, curly quotes to
-  straight, ellipsis to three dots.
-- **The lexicon.** 113 stock words and phrases with plain-English
-  replacements - delve, leverage, robust, seamless, crucial, testament to, "in
-  today's fast-paced world", "let that sink in" - with capitalisation preserved
-  and URLs untouched. It lives in
-  [`slop.json`](skills/li-human/slop.json) and it is meant to be edited.
+## 最初にvoice.mdを作る
 
-**What gets flagged instead of fixed:** "It's not just X, it's Y", rule-of-three
-triads, one-word rhetorical questions, hashtag walls, reflex engagement bait,
-uniform sentence length. Changing the shape of a sentence needs judgement, so
-those are handed back for a rewrite rather than mangled by a regex.
+`templates/voice.md` を次の場所へコピーします。
 
-**The five checks**, scored 0-100, higher is more human:
+```text
+~/.codex/linkedin/voice.md
+```
 
-| check | what it measures |
+テンプレートを自分で埋めてもよいですし、自分の過去投稿を3本Codexに渡して「これを元にvoice.mdを作って」と依頼しても構いません。関連するSkillはこのファイルを参照し、文体や避ける表現、読者像などを合わせます。
+
+`voice.md`、`log.md`、`plan.md` はユーザー個人のローカルファイルとして扱います。個人情報や非公開情報が含まれる場合、このpublicリポジトリへcommitしないでください。
+
+## 11個のSkill
+
+| Skill | 内容 |
 | --- | --- |
-| BURSTINESS | sentence-length variation. Models write even. |
-| SPECIFICITY | numbers, names and concrete markers per 100 words |
-| SLOP DENSITY | lexicon hits per 100 words |
-| FINGERPRINT | invisible characters, em dashes, curly quotes per 1,000 |
-| VOICE | contractions, person, structural tells |
+| `$li-post` | 1つのアイデアからLinkedIn投稿を作成。21種類のフックから3案を選び、本文まで作る。 |
+| `$li-comment` | 他人の投稿へのコメント案を作成。投稿内容に応じて9タイプから選ぶ。 |
+| `$li-reply` | 自分の投稿についたコメントを分類し、返信案を作成。 |
+| `$li-profile` | プロフィールを12項目・100点満点で採点し、改善文を作る。 |
+| `$li-plan` | 1週間の投稿内容・投稿時刻・交流対象を計画。`~/.codex/linkedin/plan.md` に保存。 |
+| `$li-human` | 文章のAIっぽい定型表現や不可視文字などを除去・検査するローカルツール。 |
+| `$li-carousel` | LinkedInのドキュメント投稿／カルーセルの構成とスライド文面を作成。 |
+| `$li-repurpose` | 動画、ニュースレター、記事、文字起こしなどから複数投稿を抽出。 |
+| `$li-dm` | 接続申請文、最初のDM、フォローアップ文を作成。 |
+| `$li-inbox` | LinkedIn受信箱の内容をlead / recruiter / peer / ask / spamに分類し、必要な返信だけ作る。 |
+| `$li-audit` | 過去投稿を分析し、何が機能しているか、何をやめるべきかを整理。 |
 
-The verdict weights the mean at 60% and the **weakest single check** at 40%,
-because a detector only needs one signal to fire.
+## Humanizer
 
-Run against a deliberately terrible draft:
+`$li-human` には外部依存のない2つのPythonスクリプトが含まれています。すべてローカルで実行されます。
 
-```
-  BURSTINESS    ##################......  73.0
-  SPECIFICITY   ######################## 100.0
-  SLOP DENSITY  ........................   0.0    19 stock terms, 24.1 per 100 words
-  FINGERPRINT   ........................   0.0    1 invisible, 1 em dash, 3 curly quote
-  VOICE         ########................  33.3    3 structural tells
-  ------------------------------------------------------------
-  HUMAN SCORE   ######..................  24.8   FLAGGED
-```
-
-After `humanize.py`, with the flagged structures still unrewritten:
-
-```
-  HUMAN SCORE   #################.......  69.7   REVIEW    (+44.9)
+```bash
+python3 humanize.py draft.txt --report
+python3 detect.py draft.txt
+python3 detect.py before.txt after.txt
 ```
 
-The last stretch to PASS is the part the script deliberately leaves to you.
+主な処理は次の通りです。
 
-## The fine print, which is the honest part
+- ゼロ幅スペース、joiner、soft hyphen、BOM、non-breaking spaceなどの不可視・format文字を除去／正規化
+- em dash → comma、en dash → hyphen、curly quote → straight quote、ellipsis → `...` などのタイポグラフィ正規化
+- [`slop.json`](skills/li-human/slop.json) に登録された生成AIで頻出しやすい定型表現の置換
 
-**These skills do not post to LinkedIn, and they should not.** There is no
-official API for posting to a personal profile without an approved partner
-app, and automating the site with a browser or a third-party tool violates
-[LinkedIn's User Agreement](https://www.linkedin.com/legal/user-agreement) and
-gets accounts restricted. So every skill here ends the same way: a copy-ready
-block, and you paste it. That is not a limitation bolted on afterwards, it is
-the design. It is also why the approval gate is real rather than a setting.
+三段論法的な定型、1語だけの修辞疑問、ハッシュタグの壁、露骨なengagement bait、文長の均一さなどは、自動修正せず「要書き換え」として検出します。
 
-**The five checks are local heuristics, not detector APIs.** They are modelled
-on the signals public detectors key on, and they run entirely on your machine.
-They are not GPTZero, Originality, Copyleaks, Winston or Turnitin, they do not
-call those services, and they cannot promise those verdicts. Fixing what they
-measure tends to move those numbers, because they are measuring the same
-underlying things. That is the whole claim. Nobody can honestly sell you
-"undetectable", and anybody who does is selling you something.
+5つの指標は BURSTINESS、SPECIFICITY、SLOP DENSITY、FINGERPRINT、VOICE です。これらはローカルなヒューリスティクスであり、GPTZero等の外部検出APIではありません。また、「AI生成と絶対に検出されない」ことを保証するものでもありません。
 
-**The invisible-character pass is real and it is narrow.** It removes the
-zero-width and format characters that end up in generated text and survive a
-copy-paste. That is a genuine, checkable fingerprint. It is not a claim about
-defeating a cryptographic watermarking scheme, and this repo does not make
-one.
+## Codexで使う状態ファイル
 
-**Nothing here fabricates.** No invented metrics, clients or outcomes go under
-your name. If a draft needs a number you have not given, it comes back with
-`{{your number}}` in it and a flag, every time.
+必要に応じて以下を参照します。
 
-## Files
-
+```text
+~/.codex/linkedin/voice.md
+~/.codex/linkedin/log.md
+~/.codex/linkedin/plan.md
 ```
-skills/li-post/hooks.json        21 hook formulas: template, example, what it is for, how it gets ruined
-skills/li-human/slop.json        the lexicon: 113 terms, 17 invisible classes, 11 structural tells
-skills/li-human/humanize.py      the three cleaning passes
-skills/li-human/detect.py        the five-check panel
-skills/li-profile/rubric.json    the 100-point profile score
-templates/voice.md               your voice profile. Fill this in first.
+
+- `voice.md`: 文体、読者像、使う／使わない表現、公開可能な実績など
+- `log.md`: 過去に作成・投稿した内容の履歴。`$li-audit` で利用
+- `plan.md`: `$li-plan` が作成する週間運用計画
+
+## LinkedInの自動操作について
+
+このSkillセットはLinkedIn上での投稿、コメント、connection request、DM送信、スクレイピングを自動実行しません。最終的なLinkedIn上の操作はユーザー自身が行います。
+
+また、実績、数値、クライアント、成果、共通の知人などを捏造しません。必要な事実が不足している場合は、ユーザーに確認するか、未確定であることを明示します。
+
+## 主なファイル
+
+```text
+.codex-plugin/plugin.json        Codex Plugin manifest
+skills/li-post/hooks.json        21種類の投稿フック
+skills/li-human/slop.json        定型表現・不可視文字・構造パターン
+skills/li-human/humanize.py      文章クリーニング
+skills/li-human/detect.py        5指標によるチェック
+skills/li-profile/rubric.json    プロフィール100点採点基準
+templates/voice.md               文体プロフィールのテンプレート
 ```
 
 ## Credit
 
-Made by Jake Schincariol, [opusjake.ai](https://opusjake.ai).
-The full write-up is at [opusjake.ai/r/linkedin-agent](https://opusjake.ai/r/linkedin-agent).
+Original skill pack: Jake Schincariol — [opusjake.ai](https://opusjake.ai)
+
+Original repository: [Jakeschincariol/linkedin-agent-skill](https://github.com/Jakeschincariol/linkedin-agent-skill)
+
+Codex向け移植・日本語化: Ryo Aizawa
 
 ## License
 
-MIT. Take it, change it, ship it.
+MIT。詳細は [LICENSE](LICENSE) を参照してください。

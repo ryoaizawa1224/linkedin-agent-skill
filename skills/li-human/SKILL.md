@@ -1,98 +1,67 @@
 ---
 name: li-human
 description: >-
-  Strip the machine fingerprint out of any draft - em dashes, AI slop words,
-  invisible watermark characters - and score it against a five-check detection
-  panel before it goes out. Use whenever text needs to sound human, when the
-  user says humanize, "does this sound like AI", "remove the em dashes", "de-slop
-  this", "will this get flagged", or before any LinkedIn post, comment, reply
-  or DM is shown to the user.
+  草稿から機械的な特徴やAIで頻出する定型表現、不可視文字などを除去し、
+  5つのローカル指標でチェックする。LinkedIn投稿、コメント、返信、DMを見せる前や、
+  「AIっぽさを減らして」「humanizeして」と頼まれたときに使う。
 ---
 
 # li-human
 
-Two tools live in this folder and they both actually run. Use them. Do not
-eyeball this.
+このフォルダには実際に実行できる2つのPythonツールがある。目視だけで済ませず、必要に応じて実行する。
 
 ```bash
-python3 humanize.py draft.txt --report        # clean it, show what changed
-python3 detect.py draft.txt                    # score it, five checks
-python3 detect.py before.txt after.txt         # prove the delta
+python3 humanize.py draft.txt --report
+python3 detect.py draft.txt
+python3 detect.py before.txt after.txt
 ```
 
-Both read `slop.json`, which is the lexicon: 100+ stock words and phrases with
-plain-English replacements, 17 invisible character classes, 11 typographic
-substitutions, and 11 structural tells. It is meant to be edited. If the user
-has a word they always use that the lexicon strips, remove it from the file.
+両方とも `slop.json` を読む。ここには生成文で出やすい定型語、不可視文字、タイポグラフィ置換、構造上のパターンが定義されている。ユーザー自身がよく使う語が誤って除去される場合は、lexicon側を調整する。
 
-## What gets fixed automatically
+## 自動修正するもの
 
-**1. Invisible characters.** Zero-width spaces and joiners, word joiners,
-soft hyphens, byte-order marks, Unicode tag characters, non-breaking and
-narrow spaces. A keyboard does not produce these. They survive copy-paste,
-they are invisible in every editor, and they are the single most mechanical
-thing in generated text. `humanize.py` deletes every one, including any
-remaining Unicode format character it does not have a name for.
+### 1. 不可視文字
 
-**2. Typography.** Em dash to comma, en dash to hyphen, curly quotes to
-straight, ellipsis to three dots, bullet character to hyphen. The em dash pass
-is the one that matters: it collapses ` — ` to `, ` and then cleans up the
-double punctuation that leaves behind.
+zero-width space / joiner、word joiner、soft hyphen、BOM、Unicode tag、non-breaking spaceなどを削除・正規化する。
 
-**3. The slop lexicon.** delve, leverage, robust, seamless, crucial, tapestry,
-testament to, moreover, "in today's fast-paced world", "let that sink in" and
-the rest, each swapped for a plain word, with capitalisation preserved and
-URLs left untouched.
+### 2. タイポグラフィ
 
-## What does NOT get fixed automatically
+em dash → comma、en dash → hyphen、curly quote → straight quote、ellipsis → `...`、bullet → hyphenなどを正規化する。
 
-Structural tells get **flagged, not rewritten**, because changing the shape of
-a sentence needs judgement:
+### 3. 定型表現
 
-- "It's not just X, it's Y" and "not only X but also Y"
-- Rule-of-three triads
-- Rhetorical one-word question lines: "The result?"
-- Rocket, fire, bulb, sparkle and dart emoji
-- Hashtag walls
-- Reflex engagement bait: "Thoughts?", "Agree?", "Who else?"
-- Uniform sentence length and uniform bullet length
+`slop.json` に入っている、生成AIで過剰に出やすい語句をより平易な表現へ置き換える。URL内は壊さない。
 
-That list is your job. Rewrite each flagged line by hand, keeping the meaning,
-then re-run `detect.py`. This is the part that moves the score from REVIEW to
-PASS, and it is the part a script cannot do.
+## 自動で直さず、flagするもの
 
-## The five checks
+文の構造自体を変える必要があるものは、regexで無理に修正せず検出だけする。
 
-`detect.py` scores five signals 0-100, higher is more human:
+- 「XではなくY」の定型構文
+- rule-of-three型の並列
+- 「結果は？」のような1語の修辞疑問
+- 絵文字の過剰使用
+- hashtag wall
+- 「Thoughts?」「Agree?」などの汎用engagement bait
+- 文長や箇条書き長の過度な均一性
 
-| check | what it measures | machine looks like |
-| --- | --- | --- |
-| BURSTINESS | sentence-length variation | every sentence the same length |
-| SPECIFICITY | numbers, names, concrete markers per 100 words | abstract nouns, no figures |
-| SLOP DENSITY | lexicon hits per 100 words | stock vocabulary |
-| FINGERPRINT | invisible chars, em dashes, curly quotes per 1k chars | typographically perfect |
-| VOICE | contractions, person, structural tells | no contractions, staged reveals |
+検出された行は意味を維持して書き直し、再度 `detect.py` を実行する。
 
-The verdict weights the mean at 60% and the **weakest single check** at 40%,
-because a detector only needs one signal to fire. PASS needs an overall of 70+
-with no check below 55.
+## 5つのチェック
 
-## Say this honestly
+| 指標 | 見るもの |
+| --- | --- |
+| BURSTINESS | 文長のばらつき |
+| SPECIFICITY | 数字、固有名詞、具体的なマーカー |
+| SLOP DENSITY | 定型語の密度 |
+| FINGERPRINT | 不可視文字や特定タイポグラフィの密度 |
+| VOICE | 人称、口語性、構造上のパターン |
 
-These are five local heuristics modelled on the signals public detectors key
-on. They run entirely on the user's machine and nothing is uploaded. They are
-**not** GPTZero, Originality, Copyleaks, Winston or Turnitin, they do not call
-those APIs, and they cannot promise those verdicts. Fixing what they measure
-does tend to move those numbers, because they are measuring the same
-underlying things. That is the claim. Do not make a bigger one on the user's
-behalf, and do not tell a user their text is undetectable.
+スコアはローカルなヒューリスティクスであり、GPTZero、Originality、Copyleaks、Winston、Turnitin等の外部APIではない。「絶対にAI判定されない」と保証しない。
 
-## Order of operations
+## 基本手順
 
 1. `humanize.py draft.txt -o clean.txt --report`
-2. Read the structural flags. Rewrite those lines yourself.
-3. `detect.py draft.txt clean.txt` to show the before and after.
-4. If the verdict is not PASS, fix the weakest check named in the output and
-   go again. Two rounds is normal. Five means the draft was written by
-   formula, and the fix is a different draft, not more passes.
-5. Show the user the cleaned text and the score. Never the score alone.
+2. structural flagを読み、必要な行をモデル側で書き直す。
+3. `detect.py draft.txt clean.txt` でbefore / afterを比較する。
+4. PASSにならなければ、最も弱い指標を中心に再修正する。
+5. ユーザーにはスコアだけでなく、修正後の文章も必ず示す。

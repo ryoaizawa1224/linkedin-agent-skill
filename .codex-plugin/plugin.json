@@ -1,0 +1,28 @@
+{
+  "name": "linkedin-agent",
+  "version": "1.0.0-codex.1",
+  "description": "LinkedInの投稿作成、コメント、返信、プロフィール改善、週間計画、DM、受信箱整理、カルーセル、再利用、投稿分析、humanizerをまとめたCodex Skillセット。",
+  "author": {
+    "name": "Jake Schincariol / Codex port by Ryo Aizawa",
+    "url": "https://github.com/ryoaizawa1224/linkedin-agent-skill"
+  },
+  "homepage": "https://github.com/ryoaizawa1224/linkedin-agent-skill",
+  "repository": "https://github.com/ryoaizawa1224/linkedin-agent-skill",
+  "license": "MIT",
+  "keywords": ["linkedin", "content", "writing", "humanizer", "social", "marketing", "japanese"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "LinkedIn Agent",
+    "shortDescription": "LinkedIn運用を支援する11個のCodex Skills",
+    "longDescription": "投稿作成からコメント、返信、プロフィール改善、週間運用計画、DM、受信箱整理、カルーセル、コンテンツ再利用、投稿分析までを支援します。LinkedInへの自動投稿・自動送信は行いません。",
+    "developerName": "Jake Schincariol / Ryo Aizawa",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/ryoaizawa1224/linkedin-agent-skill",
+    "defaultPrompt": [
+      "$li-post でこのアイデアをLinkedIn投稿にして",
+      "$li-plan で今週のLinkedIn運用を計画して",
+      "$li-profile でプロフィールを採点して改善して"
+    ]
+  }
+}

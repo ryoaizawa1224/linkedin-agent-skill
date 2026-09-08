@@ -1,71 +1,34 @@
 ---
 name: li-carousel
 description: >-
-  Build a LinkedIn document post (carousel) - slide-by-slide copy, the cover
-  that earns the swipe, and the PDF to upload. Use when the user says
-  "carousel", "document post", "slides for LinkedIn", "turn this into a
-  carousel", or has a list-shaped idea that would die as a text post.
+  LinkedInのドキュメント投稿／カルーセルを、スライド構成から本文まで作る。
+  carousel、document post、LinkedIn用スライド、資料化などを頼まれたときに使う。
 ---
 
 # li-carousel
 
-Document posts are the highest-dwell format on LinkedIn, because a swipe is
-counted and a scroll is not. The format rewards one idea broken into steps.
-It punishes a text post cut into pieces.
+手順、カウントダウン、before/after、複数要素からなるframeworkなど、**順序**がある内容に使う。1つの主張だけなら無理に分割せず `$li-post` に渡す。
 
-## When to use it instead of a text post
+## 基本構成
 
-Use a carousel when the idea has **sequence** - steps, a countdown, a
-before/after progression, a framework with parts. Use a text post when the
-idea is one claim. Splitting one claim across eight slides is the most common
-way carousels fail, and if that is what the user has, say so and hand them to
-`/li-post`.
+8〜12枚を目安にする。
 
-## Structure
-
-8-12 slides. Under 8 is a text post. Over 12 and the completion rate falls off
-a cliff.
-
-```
-1        COVER      the hook, 6 words or fewer, plus one line of promise
-2        THE STAKE  why this matters, in one sentence
-3-N      ONE IDEA PER SLIDE. A headline of 3-7 words, and at most 25 words
-                    under it. If a slide needs a paragraph, it is two slides.
-N+1      RECAP      the whole thing as a list, so the screenshot is useful
-LAST     CTA        one action. Follow, comment a keyword, or the link. One.
+```text
+1       COVER      6語程度までの強いフック + 1行の約束
+2       WHY        なぜ読む価値があるか
+3-N     BODY       1スライド1アイデア
+N+1     RECAP      全体を一覧で振り返れるページ
+LAST    CTA        行動を1つだけ
 ```
 
-## Slide copy rules
+スマホで読める文字量を優先し、1枚を長い段落にしない。必要なら2枚に分ける。
 
-- **Slide 1 is 80% of the result.** Six words. Big. The rest of the deck
-  cannot save a cover nobody swipes.
-- **Number every slide** (3/10). Completion goes up when people can see the
-  end.
-- **No slide is a paragraph.** If you cannot say it in 25 words, split it.
-- **The recap slide is the one people screenshot.** Make it standalone.
-- **The user's handle on every slide**, small, bottom corner. Screenshots
-  travel without you.
+## PDF化
 
-## Making the PDF
+必要ならHTMLで1スライド1sectionとして作成し、PDFへ出力する。プロジェクト内にブランドガイドやdesign systemがある場合はそれを優先し、勝手に別の配色を作らない。
 
-LinkedIn wants a PDF, 1080x1350 (4:5) for maximum feed real estate, under
-100MB, under 300 pages. Build it as HTML and print to PDF:
+## 出力
 
-```bash
-# one page per slide, 1080x1350, no margins
-# then: Chrome headless --print-to-pdf, or any HTML-to-PDF you already use
-```
+最初にスライドごとの文章を一覧で提示する。その後、LinkedInフィード上でPDFと一緒に載せる短い投稿本文も作る。両方を `$li-human` でチェックする。
 
-Write the HTML with one `<section>` per slide, `width:1080px; height:1350px;
-page-break-after:always`, a single accent colour, and type no smaller than
-28px - people read these on a phone at thumbnail size. If the user has a brand
-skill or design system in this project, use it and do not invent a palette.
-
-## Output
-
-The slide-by-slide copy first, as a numbered list the user can read in ten
-seconds. Then the accompanying **post text** - a carousel still needs 2-3
-lines above it, which is the actual hook in the feed. Run both through
-`/li-human`. Then build the PDF only if the user approves the copy.
-
-Nothing is uploaded to LinkedIn. The user posts the PDF themselves.
+PDF生成は文章案をユーザーが承認した後に行う。LinkedInへのアップロードは自動化しない。

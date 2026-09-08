@@ -1,94 +1,37 @@
 ---
 name: li-plan
 description: >-
-  Build the week on LinkedIn - what to post, when to post it, and who to engage
-  with. Use when the user says "plan my week", "what should I post", "content
-  calendar", "I have nothing to post about", or wants a posting schedule and an
-  engagement list.
+  LinkedInの1週間の運用計画を作る。何を投稿するか、いつ投稿するか、誰と交流するかを決める。
+  「今週の投稿計画」「何を投稿すればいい」「content calendar」などを頼まれたときに使う。
 ---
 
 # li-plan
 
-The control room. Everything else in this pack executes; this decides what
-gets executed. Run it once a week, on the same day.
+このSkillセットの司令塔。週1回、同じ曜日に実行する想定。
 
-## Input
+## 入力
 
-If `~/.claude/linkedin/voice.md` and `log.md` exist, read them - the plan
-should not repeat a theme from the last fortnight. If they do not exist, ask
-for four things and write them down:
+`~/.codex/linkedin/voice.md` と `~/.codex/linkedin/log.md` があれば読み、直近2週間で同じテーマを繰り返さないようにする。ない場合は次を確認する。
 
-1. What the user sells, and to whom.
-2. The three or four themes they want to be known for.
-3. What actually happened this week - a client call, a number, a mistake, a
-   thing they built, an argument they had. This is where posts come from.
-4. Ten to twenty people or companies worth being visible to.
+1. 何を提供／販売していて、誰が相手か。
+2. どんな3〜4テーマで知られたいか。
+3. 今週実際に起きたこと。顧客との会話、数字、失敗、作ったもの、議論など。
+4. 継続的に関係を作りたい人物・企業を10〜20件。
 
-## What to post
+## 投稿内容
 
-Four posts a week beats seven. Consistency is a floor, not a target, and the
-fifth post of a week is almost always the weak one that drags the average.
+Proof、Opinion、Teach、Story、Offerを偏らせすぎず組み合わせる。各投稿枠には単なる「テーマ」ではなく、今週の具体的な出来事から切り出した**角度**を設定し、`li-post/hooks.json` のhook formulaも割り当てる。
 
-Mix across the week, never two of the same type back to back:
+## 投稿時刻
 
-| type | share | job |
-| --- | --- | --- |
-| **Proof** | 1 per week | something that happened, with a number |
-| **Opinion** | 1 per week | a position that could lose you followers |
-| **Teach** | 1 per week | one thing the reader can do today |
-| **Story** | 1 per fortnight | a scene with dialogue and a cost |
-| **Offer** | 1 per fortnight | what you sell, said plainly, no apology |
+ユーザー自身ではなく、想定読者のタイムゾーンに合わせる。投稿時刻の最適化は、フックや本文の質より優先しない。
 
-For each slot give: the theme, the specific angle drawn from what actually
-happened this week, and the hook formula number from `li-post/hooks.json` that
-fits it. Not a topic - an angle. "AI" is not a plan. "The proposal we lost
-because our AI draft had an em dash in it" is a post.
+## 交流対象
 
-## When to post
+10人程度を、reach / peers / buyersの3グループに分ける。目的は自動的ないいね回りではなく、相手の投稿に本当に追加価値のあるコメントをすること。
 
-Post when the user's audience is at a desk. For a B2B audience in one
-timezone, Tuesday to Thursday, 7:30-9:30am local, is the working default, with
-Monday afternoon and Friday morning as the second tier. Weekends are for
-personal-story posts or nothing.
+## 出力
 
-But state this plainly: **the day and hour matter far less than whether the
-first line is good.** If the user is optimising posting times before their
-hooks work, they are polishing the wrong thing, and you should say so.
+曜日ごとの投稿／交流予定と対象者リストを出す。「火曜の投稿を書いて」のように指定されたら `$li-post` を使う。
 
-Anchor the times to their audience's timezone, not the user's, if those
-differ.
-
-## Who to engage with
-
-Build a list of 10, split three ways:
-
-- **5 reach** - people with an audience the user wants, whose posts they can
-  genuinely add to. Comment before they have 20 comments or nobody sees it.
-- **3 peers** - same level, same field. This is the group that reciprocates.
-- **2 buyers** - people who could actually buy. Comment on their posts for
-  weeks before any DM, and never pitch in a comment.
-
-20 minutes a day, before posting, not after. Comments on other people's posts
-are what makes the user's own post land.
-
-## Output
-
-```
-WEEK OF SEP 8
-
-MON  engage only  (20 min, list below)
-TUE  8:15am  PROOF    #17 Time Anchor   - the 5hr -> 20min proposal rebuild
-WED  engage only
-THU  8:00am  OPINION  #1  Contrarian    - why we killed the discovery call
-FRI  8:30am  TEACH    #21 Direct Value  - the 4-line reopen email, given away
-SAT  -
-SUN  4:00pm  STORY    #9  Cold Open     - the "going with someone cheaper" email
-
-ENGAGE  (5 reach / 3 peers / 2 buyers)
-  ...
-
-Say "write Tuesday" and I will draft it.
-```
-
-Write the plan to `~/.claude/linkedin/plan.md` so the other skills can read it.
-Nothing is scheduled or posted anywhere - this is a plan, and the user runs it.
+計画は `~/.codex/linkedin/plan.md` に保存し、他のSkillから読めるようにする。LinkedInへの予約投稿や自動操作は行わない。

@@ -1,83 +1,44 @@
 ---
 name: li-dm
 description: >-
-  Write connection notes and DM follow-ups that get replies - the 200-character
-  invite, the first message, and the two follow-ups. Use when the user says
-  "write a connection request", "DM this person", "outreach message", "how do I
-  follow up", or is reaching out to someone specific on LinkedIn.
+  LinkedInのconnection request、最初のDM、フォローアップ文を作る。
+  outreach、DM、接続申請、フォローアップを頼まれたときに使う。
 ---
 
 # li-dm
 
-The invite note is 200 characters. The first DM decides whether there is a
-second one. Neither is a pitch.
+接続申請やDMを、汎用営業文ではなく「なぜ今この相手に連絡するのか」が分かる文章にするSkill。
 
-## Before writing, get the specifics
+## 書く前に確認すること
 
-Ask for, in one batched question:
+1. **誰に送るか**: 名前、役割、会社など
+2. **今連絡する具体的な理由**: 相手の投稿、発表、登壇、共通の出来事など
+3. **最終的に何を求めているか**: 会話、紹介、採用、商談など
 
-1. **Who** - name, role, company.
-2. **The hook** - the actual reason to reach out now. A post they wrote, a
-   thing their company shipped, a mutual connection, a talk they gave. Not
-   "they fit my ICP".
-3. **What the user wants** - a conversation, a referral, a job, a sale. Be
-   honest internally, even if the message does not lead with it.
+具体的な理由がない場合は、無理に自然なふりをした文章を作らない。
 
-If there is no specific reason to message this person today, say so. A message
-with no reason is what everyone else sends, and it is why their reply rate is
-2%.
+## Connection request
 
-## The invite note (200 characters)
+短く、相手固有の具体的な参照 + 自分が誰か、程度にする。接続申請文の時点で大きなお願いや営業pitchを詰め込まない。文字数制限がある場合は実際に数える。
 
-```
-{one specific reference to them} + {one line of who you are} + {no ask}
-```
+## 最初のDM
 
-The note asks for nothing. It exists to make the accept obvious. Under 200
-characters including spaces - count them and show the count.
+- 2〜4文程度を基本にする。
+- 接続申請で触れた具体的な話題を引き継ぐ。
+- 何かを求める前に、情報・数字・資料など相手にとっての価値を1つ渡す。
+- askは1つ、小さく具体的にする。
+- 最初からcalendar linkを押し付けない。
 
-```
-Saw your post on killing the discovery call - we did the same thing in March
-and it worked. I run ops at a 12-person studio. Would like to follow along.
-                                                                    [187/200]
-```
+## フォローアップ
 
-## The first message, after they accept
+「just following up」のような単なる催促ではなく、新しい情報や価値があるときだけ送る。回数を増やし続けない。
 
-Wait a day. Then:
+## 禁止
 
-- **Two to four sentences.** A screen of text is a delete.
-- **Reference the specific thing** from the note - continuity is the whole
-  reason the note was specific.
-- **Give something before asking.** A number, a template, a name, an answer.
-- **One ask, and make it small.** "Worth a 15-minute call?" beats "let me walk
-  you through our platform".
-- **No calendar link in message one.** It reads as a funnel, because it is.
+- connection requestやDMの自動送信
+- 実在しない共通の知人・学校・出来事の捏造
+- 読んでいない相手の記事や投稿を読んだふりすること
 
-## Follow-ups
+## 出力
 
-Two. That is the number.
-
-- **+4 days** - add something new. Never "just bumping this" or "following up
-  on my last message". If you have nothing new, you have no follow-up.
-- **+10 days** - the close-the-loop message. Say you will stop, and mean it.
-  This one gets a surprising share of the total replies, because it removes
-  the pressure.
-
-Then stop. A third follow-up converts nobody and costs the relationship.
-
-## Never
-
-- Never send an automated connection or message sequence. Automated outreach
-  tools violate LinkedIn's User Agreement and get accounts restricted.
-- Never fabricate a mutual connection, a shared school, or having read
-  something the user has not read.
-- Never write the message that opens "I hope this message finds you well".
-- Never send more than 20 invites a day. Beyond that, LinkedIn throttles the
-  account, and a throttled account is a dead one.
-
-## Output
-
-The invite note with its character count, the first message, and both
-follow-ups with the day they go out. All humanized through `/li-human`. The
-user sends every one of them by hand.
+connection request、最初のDM、必要なフォローアップをまとめて提示し、すべて `$li-human` を通す。実際の送信はユーザーが行う。
