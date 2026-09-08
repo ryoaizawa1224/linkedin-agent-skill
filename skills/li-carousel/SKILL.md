@@ -1,26 +1,34 @@
 ---
 name: li-carousel
 description: >-
-  Build a LinkedIn document post (carousel) - slide-by-slide copy, the cover
-  that earns the swipe, and the PDF to upload. Use when the user says
-  "carousel", "document post", "slides for LinkedIn", "turn this into a
-  carousel", or has a list-shaped idea that would die as a text post.
+  LinkedInのドキュメント投稿／カルーセルを、スライド構成から本文まで作る。
+  carousel、document post、LinkedIn用スライド、資料化などを頼まれたときに使う。
 ---
 
 # li-carousel
 
-Use a carousel when the idea has sequence: steps, a countdown, a before/after progression, or a framework with parts. Use a text post when the idea is one claim. If it is really a text post, hand it to `$li-post`.
+手順、カウントダウン、before/after、複数要素からなるframeworkなど、**順序**がある内容に使う。1つの主張だけなら無理に分割せず `$li-post` に渡す。
 
-## Structure
+## 基本構成
 
-Use 8-12 slides, one idea per slide, a strong cover, a recap slide, and one CTA. Keep slide text short enough to read on a phone.
+8〜12枚を目安にする。
 
-## Making the PDF
+```text
+1       COVER      6語程度までの強いフック + 1行の約束
+2       WHY        なぜ読む価値があるか
+3-N     BODY       1スライド1アイデア
+N+1     RECAP      全体を一覧で振り返れるページ
+LAST    CTA        行動を1つだけ
+```
 
-Build as HTML with one section per slide and print to PDF. If the user has a brand skill or design system in the project, use it rather than inventing a palette.
+スマホで読める文字量を優先し、1枚を長い段落にしない。必要なら2枚に分ける。
 
-## Output
+## PDF化
 
-Show the slide-by-slide copy first, then the accompanying post text. Invoke `$li-human` on both. Build the PDF only after the user approves the copy.
+必要ならHTMLで1スライド1sectionとして作成し、PDFへ出力する。プロジェクト内にブランドガイドやdesign systemがある場合はそれを優先し、勝手に別の配色を作らない。
 
-Nothing is uploaded to LinkedIn. The user posts the PDF themselves.
+## 出力
+
+最初にスライドごとの文章を一覧で提示する。その後、LinkedInフィード上でPDFと一緒に載せる短い投稿本文も作る。両方を `$li-human` でチェックする。
+
+PDF生成は文章案をユーザーが承認した後に行う。LinkedInへのアップロードは自動化しない。
