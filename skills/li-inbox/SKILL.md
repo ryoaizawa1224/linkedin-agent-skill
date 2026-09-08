@@ -1,67 +1,44 @@
 ---
 name: li-inbox
 description: >-
-  Triage the LinkedIn inbox - sort connection requests and DMs into leads,
-  recruiters, peers and spam, and draft the replies worth sending. Use when the
-  user says "my inbox is a mess", "triage my DMs", "should I reply to this",
-  pastes a batch of LinkedIn messages, or is drowning in connection requests.
+  LinkedInの受信メッセージやconnection requestを分類し、返信すべきものだけ返信案を作る。
+  inbox整理、DMのtriage、返信判断などを頼まれたときに使う。
 ---
 
 # li-inbox
 
-Most LinkedIn inboxes are 80% noise, and the cost of that noise is that the
-20% goes unanswered for a week. This skill separates them, then writes only
-what is worth writing.
+LinkedInの受信箱を、対応価値に応じて整理するSkill。
 
-## Input
+## 入力
 
-The user pastes the messages. Screenshots are fine. Do not log into their
-account or read their inbox with a browser tool.
+ユーザーが貼り付けたメッセージ本文やスクリーンショットを使う。LinkedInにログインして受信箱を自動取得したり、browser automationで読むことはしない。
 
-## Sort into five
+## 5分類
 
-| bucket | signal | action |
+| 分類 | 判断基準 | 対応 |
 | --- | --- | --- |
-| **LEAD** | describes a problem the user solves, or asks about working together | reply today, full answer |
-| **RECRUITER** | a role, a company, a salary band | reply if the role is real, one line if not |
-| **PEER** | someone in the same field with something to say | reply this week, keep it human |
-| **ASK** | wants advice, time, an intro, a favour | reply if it is cheap and specific, decline cleanly if not |
-| **SPAM** | agency pitch, lead-gen sequence, crypto, "quick question" with no question | archive, no reply |
+| **LEAD** | ユーザーが解決できる問題を抱えている／仕事相談 | 早めに具体的に返信 |
+| **RECRUITER** | 求人、企業、役割の話 | 興味があれば必要条件を確認 |
+| **PEER** | 同業者・近い領域の人から内容ある連絡 | 必要に応じて返信 |
+| **ASK** | 助言、紹介、時間、依頼 | コストと具体性で判断 |
+| **SPAM** | 汎用営業文、自動sequence、無関係なpitch | 基本返信しない |
 
-Print the counts first. Seeing "3 leads, 2 recruiters, 41 spam" is most of the
-value.
+最初に各分類の件数を示す。
 
-## Detecting a sequence
+## 自動sequenceの特徴
 
-Automated outreach has a shape: an invite note with no specifics, a message
-that arrives within minutes of the accept, "quick question", "I noticed you're
-in {industry}", a calendar link in message one, then a bump exactly four days
-later. When you see it, mark it SPAM and say which tell gave it away. The user
-does not owe a reply to a script.
+具体性のないconnection note、承認直後の定型メッセージ、「quick question」、業界名だけ差し替えた文章、最初からcalendar link、一定間隔のbumpなど、同じ営業sequenceの特徴が見える場合はSPAMとして理由も示す。
 
-## Replies
+## 返信方針
 
-- **LEAD** - answer the actual question in the message, in full, for free. If
-  it is a fit, the offer is one sentence at the end. If it is not, say so and
-  point them somewhere useful. Both outcomes are good.
-- **RECRUITER** - if the role is genuinely interesting, ask the three things
-  the message left out: comp band, level, and whether it is in-office. If it
-  is not, one line: not looking, happy to refer, and mean the refer.
-- **ASK** - if it costs under ten minutes and is specific, do it. If it is
-  "can I pick your brain", decline in one warm sentence and give them the one
-  answer you would have given on the call. That is the polite version and it
-  is also the more useful one.
-- **DECLINES** are short, warm and final. No "let's revisit in Q3" if there is
-  no Q3.
+- **LEAD**: 実際の質問にまず答える。fitする場合だけ最後に小さく次の行動を提示する。
+- **RECRUITER**: 興味があれば報酬帯、level、勤務形態など不足情報を確認する。
+- **PEER**: 相手の内容に応じて自然に返す。
+- **ASK**: 小さく具体的な依頼なら対応。負担が大きい・曖昧なら短く断る。
+- **SPAM**: 原則返信しない。
 
-## Output
+## 出力
 
-Grouped by bucket, counts first, drafts only for the buckets that get replies,
-each one humanized. Then the gate: the user sends them.
+分類ごとの件数を先に示し、返信する価値のあるメッセージだけ草稿を作る。必要な返信は `$li-human` で整える。
 
-```
-INBOX  ·  52 items  ·  3 LEAD, 2 RECRUITER, 4 PEER, 2 ASK, 41 SPAM
-
-SPAM  (41) - archive. 38 are the same sequence: no-specifics invite,
-"quick question" within 4 minutes of accept, calendar link in message one.
-```
+実際の送信はユーザーが行う。
