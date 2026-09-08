@@ -1,52 +1,45 @@
 # voice.md
 
-Copy this to `~/.claude/linkedin/voice.md` and fill it in. Every skill in the
-pack reads it. Ten minutes here is the difference between drafts you post and
-drafts you rewrite.
+このファイルを `~/.codex/linkedin/voice.md` にコピーして埋めてください。関連するSkillはこのファイルを参照します。ここを10分かけて作るだけで、「そのまま投稿できる草稿」と「全部書き直す草稿」の差がかなり出ます。
 
-If you would rather not fill it in by hand, paste three of your own posts into
-Claude and say "write my voice.md from these". That works better than guessing
-at the answers.
+手で埋めたくない場合は、自分の過去投稿を3本Codexに渡して「これを元にvoice.mdを作って」と依頼してください。推測だけで作るより精度が上がります。
 
 ---
 
-## Who I am
+## 自分について
 
-- **Name:**
-- **What I do, in one sentence:**
-- **Who I am writing for:** (be specific: "agency owners doing $1-5M", not "professionals")
-- **What I sell:**
+- **名前:**
+- **何をしている人か、一文で:**
+- **誰に向けて書くか:** （「社会人」ではなく「売上1〜5億円規模の制作会社経営者」のように具体的に）
+- **何を提供／販売しているか:**
 
-## What I sound like
+## 自分の文体
 
-- **Three of my own posts that sound most like me:** (paste them, or link them)
-- **Words I actually use:**
-- **Words I would never use:**
-- **Sentence length:** (short and punchy / mixed / long and considered)
-- **Do I swear:** (yes / mild / no)
-- **Emoji:** (never / one, rarely / freely)
-- **Contractions:** (yes - almost always yes)
+- **自分らしさが最も出ている過去投稿3本:** （本文を貼るかリンク）
+- **実際によく使う言葉:**
+- **絶対に使わない言葉:**
+- **文の長さ:** （短くテンポよく / 混在 / 長めでじっくり）
+- **乱暴な言葉・スラング:** （使う / 少し / 使わない）
+- **絵文字:** （使わない / ごく稀に1個 / 比較的使う）
+- **口語・省略表現:**
 
-## My positions
+## 自分の立場・主張
 
-Three to five things I believe that some of my audience does not. These are
-where the good posts come from.
+読者の一部が反対しそうでも、自分が本当にそう考えていることを3〜5個。良い投稿の種になりやすい部分です。
 
 1.
 2.
 3.
 
-## Off limits
+## 公開しないこと
 
-- **Topics I do not post about:**
-- **Clients or numbers I cannot name publicly:**
-- **Claims I am not allowed to make:** (regulated industry, employer policy, NDA)
+- **投稿しないテーマ:**
+- **公開できないクライアント名・数値:**
+- **言ってはいけない主張:** （勤務先ルール、NDA、規制業界など）
 
-## Proof I can use
+## 公開してよい実績・根拠
 
-Real numbers, outcomes and stories I am happy to put my name on. The skills
-will never invent one, so if this section is empty, every draft comes back
-with `{{your number}}` in it.
+自分の名前で公開してよい実数、成果、経験、エピソードを書きます。Skillは実績を捏造しません。この欄が空の場合、数字が必要な草稿では `{{あなたの数字}}` のように未確定箇所として残します。
 
 -
 -
