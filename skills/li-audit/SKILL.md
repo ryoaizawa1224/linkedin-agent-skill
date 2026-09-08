@@ -1,34 +1,46 @@
 ---
 name: li-audit
 description: >-
-  Post-mortem on what the user has already published - which posts actually
-  worked, why, and what to stop doing. Use when the user pastes their LinkedIn
-  analytics or past posts and asks "what's working", "why did this flop", "read
-  my analytics", "audit my content", or wants to know what to double down on.
+  過去のLinkedIn投稿を分析し、何が機能したか、なぜ伸びた／伸びなかったか、
+  今後何を増やし何をやめるべきかを整理する。投稿分析やanalyticsの監査を頼まれたときに使う。
 ---
 
 # li-audit
 
-The only honest source of what works for an account is that account. Every rule in every LinkedIn guide, including the ones in this pack, is a prior. The user's own last 30 posts are the evidence.
+一般論より、そのアカウント自身の過去投稿を優先して判断するSkill。
 
-## Input
+## 入力
 
-Ask for whichever the user has:
+利用できるものを使う。
 
-- The post analytics export (LinkedIn: Analytics -> Content -> Export). CSV.
-- Or a screenshot per post with impressions, reactions, comments, reposts.
-- Or just the posts and their reaction counts, which is enough for a first pass.
+- LinkedInのContent Analytics export（CSV）
+- 各投稿のimpressions、reactions、comments、reposts等のスクリーンショット
+- 投稿本文とreaction数だけでも初期分析は可能
 
-Also read `~/.codex/linkedin/log.md` if it exists, since it records which hook formula each post used.
+`~/.codex/linkedin/log.md` があれば読み、どのhook formulaを使ったかも照合する。
 
-## What to actually measure
+## 見る指標
 
-Compute and show engagement rate, comment ratio, reach multiple, and save/send rate when available. Rank by engagement rate and reach multiple, not raw impressions.
+可能な範囲で以下を計算し、式も示す。
 
-## Then find the pattern
+- **Engagement rate** = (reactions + comments + reposts) / impressions
+- **Comment ratio** = comments / reactions
+- **Reach multiple** = impressions / follower count
+- **Save/send rate** = データが取れる場合
 
-Compare the top 5 and bottom 5 across hook formula, format, length, theme, day/time, and first-hour replies. State findings as claims with evidence and confidence. With too few posts, say the sample is too small rather than inventing a pattern.
+単純なimpressionsだけではなく、engagement rateとreach multipleを重視する。
 
-## Output
+## パターンを探す
 
-Summarize the strongest signals, what to stop doing, and what to do more of. Then hand the conclusions to `$li-plan` so next week's plan is built on the user's own evidence rather than defaults.
+上位投稿と下位投稿を並べ、フック、フォーマット、長さ、テーマ、曜日・時間、初動返信などの差を見る。曜日・時間は最後に確認し、他の要因より過大評価しない。
+
+サンプル数が少ない場合は、無理に傾向を断定しない。主張には根拠と確信度を添える。
+
+## 出力
+
+- 最も強い傾向
+- やめること
+- 増やすこと
+- 次週に試す仮説
+
+を整理し、結論を `$li-plan` に渡して次週の計画へ反映する。
